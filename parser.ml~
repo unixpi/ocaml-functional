@@ -238,22 +238,13 @@ and term3 inp =
 
 and fact inp = (nat >>= fun v1 -> return (Num v1)) inp;;
 
-(* Q4.3: Add parenthesis support to your factored grammar
+(* Q4.3: Add parenthesis suppor to your factored grammar
 
 Expr E := E+E | E-E | E*E | E/E | sin E | cos E | E^E |-E | N | (E)
 Numbers N := nat
 
    Hint: don't factor the grammar again, use your answer for Q4.1 as a
-   basis and extend it.
-
-   expr::= term1 + expr | term1 - expr | term1
-   term1::= term2 * term1 | term2 / term1 | term2
-   term2::= term3 ^ term2 | term3
-   term3::= -term4 | cos term4 | sin term4 | term4
-   term4::= (expr) | fact
-   fact::= nat 
-
- 
+   basis and extend it. 
 *)
 
 

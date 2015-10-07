@@ -22,7 +22,6 @@ remove_duplicates (function x -> function y -> x = y) [1;2;2;2];;
 
 remove_duplicates (function x -> function y -> x = y) [1;2;1;2;1];;
 
-remove_duplicates eq [1;2;3;3;2;1];;
 
 HW2 Q3 Convolution
 
