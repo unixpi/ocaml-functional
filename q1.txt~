@@ -1,0 +1,30 @@
+let rec concat l = match l with
+| [] -> ""
+| x::xs -> x ^ (concat xs)
+
+let concat' l =
+let rec conc l acc = match l with
+| [] -> acc
+| x::xs -> conc xs (acc ^ x)
+in
+conc l ""
+
+Prove that concat l produces the same as concat' l.
+
+Intuitively this is clear as both functions start off with the same initial state
+and keep joining elements together until the list is empty, the only difference beingthat concat' uses an inner function conc so as to store the result in an accumulator
+variable. concat' is better in the sense that there is no danger of a stack overflow since the string we want to eventually return is being stored in 'acc' rather than onthe stack.
+
+formal proof: (this is extremely boring)
+
+NTS concat 1 = concat' 1
+
+Base Case: l = []
+
+concat l = concat [] = "" = conc [] "" = concat' [] = concat' l
+
+the first equality is due to the definition of l in the base case
+the second equality is by the program concat
+the third and fourth  equalities are by the program concat'
+
+

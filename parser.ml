@@ -262,7 +262,66 @@ Numbers N := nat
    takes a string as input and returns an expression.*)
 
 
-let rec expr (inp : string) : expr =
-  raise NotImplemented 				(* Fill in this code! *)
+let rec expr inp =   			    
+    ((term1 >>= fun v1 ->
+    ch '+' >>= fun _ ->
+	      expr >>= fun v2 ->
+	      return (Plus (v1, v2)))
+    +++
+  (term1 >>= fun v1 ->
+   ch '-' >>= fun _ ->
+                    expr >>= fun v2 ->
+                    return (Minus (v1, v2)))
+   +++
+     term1) inp
+and term1 inp =
+  ((term2 >>= fun v1 ->
+    ch '*' >>= fun _ ->
+    term1 >>= fun v2 ->
+    return (Mult (v1, v2)))
+   +++
+     (term2 >>= fun v1 ->
+      ch '/' >>= fun _ ->
+      term1 >>= fun v2 ->
+      return (Div (v1, v2)))
+   +++
+     term2) inp
+and term2 inp =
+  ((term3 >>= fun v1 ->
+    ch '^' >>= fun _ ->
+    term2 >>= fun v2 ->
+    return (Exp (v1, v2)))
+   +++
+     term3) inp
+and term3 inp =
+  ((ch '-' >>= fun _ ->
+   term4 >>= fun v2 ->
+   return (Neg v2))
++++  
+(ch 'c' >>= fun _ ->
+ ch 'o' >>= fun _ ->
+ ch 's' >>= fun _ ->
+ term4 >>= fun v2 ->
+ return (Cos v2))
++++
+(ch 's' >>= fun _ ->
+ ch 'i' >>= fun _ ->
+ ch 'n' >>= fun _ ->
+ term4 >>= fun v2 ->
+ return (Sin v2))
+   +++ term4) inp
+and term4 inp =
+  ((ch '(' >>= fun _ ->
+    expr >>= fun v1 ->
+    ch ')' >>= fun _ ->
+    return v1)
+     +++ fact) inp
+	      
+
+and fact inp = (nat >>= fun v1 -> return (Num v1)) inp;;
 
 
+  (* examples *)
+
+  expr "cos(1+2)^3*4" ;;
+  expr_no_parens "1+2*3^4*5";;    
