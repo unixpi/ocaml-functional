@@ -1,23 +1,3 @@
-(* HOMEWORK 1 : COMP 302 Fall 2015
-   
-   PLEASE NOTE:  
-
-   * All code files must be submitted electronically
-     BEFORE class on 8 Oct 2015
-
-  *  The submitted file name must be parser.ml 
-
-  *  Submitted solutions will be graded according to their correctness and elegance. 
-     Please consult the OCaml style guide posted on the course website.
-
-  *  Your program must type-check and run usig OCaml of at least OCaml 4.0
-
-  * Remove all "raise NotImplemented" with your solutions
-*)
-
-(* The code from the functional parsing lecture
-   Author: Francisco Ferreira
- *)
 
 exception NotImplemented 
 
@@ -165,10 +145,6 @@ type expr =
 
 Expr E := E+E | E-E | E*E | E/E | sin E | cos E | E^E |-E | N
 Numbers N := nat
-
-   Hint: Use the example in the lecture notes, you may need to add a new
-   syntactic class. The precedence ordering you choose should be the same as in
-   OCaml. 
    
    expr::= term1 + expr | term1 - expr | term1
    term1::= term2 * term1 | term2 / term1 | term2
