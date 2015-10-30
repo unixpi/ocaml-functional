@@ -1,0 +1,6 @@
+
+let rec conv f g dy =                                                                                                         
+    (fun x -> iter_sum (fun y -> f y *. g (x +. y)) (dy /. 2.0, x) (fun y -> y +. dy));;
+
+conv (fun x -> x *. x) (fun y -> 1.0) 5;;
+
