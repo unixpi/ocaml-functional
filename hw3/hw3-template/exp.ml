@@ -92,8 +92,10 @@ end
   			      
   						
     
-  let rec all_paths e p = raise (Error "Not Implemented Yet")
-
+let rec all_paths e p = match e with
+    | Int(a) -> (path (Int(a)) p) :: []
+    | Plus (a, b) -> ((path (Plus (a,b)) p) :: (L (path a p)) :: (R (path b p)) :: [])
+	 ;;
   let div_by_zero e = raise (Error "Not Implemented Yet")
 
  end;;
@@ -101,11 +103,13 @@ end
  module Test = 
  struct
    open ArithExp
-   let predicate expression =
+   let p1 expression =
      expression = Int(3);;
+   let p2 expression =
+     expression = Times(Int(10), Int(5));;
    let e1 = Plus(Times(Int(3), Int(2)), Div(Times(Int(10), Int(5)), Int(0)))
-   let e2 = Plus(Times(Int(3), Int(2)), Div(Times(Int(10), Int(5)), Times(Int(3), Int(2))))
-
-   path e1 predicate;; (* should return L(L(H))) *)		
-
+  let e2 = Plus(Times(Int(3), Int(2)), Div(Times(Int(10), Int(5)), Times(Int(3), Int(2))))
+;;
+   path e1 p1;; (* should return L(L(H))) *)		
+   path e1 p2;; (* should return R(L(H)) *)
  end 
