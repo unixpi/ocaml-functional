@@ -89,15 +89,46 @@ end
  		   else
 		     try L (path a p) with No_Path -> R (path b p)
 ;; 
-  			      
-  						
-    
+
+let remove_elt e l =
+  let rec aux l acc = match l with
+    | [] -> List.rev acc
+    | h::t when e = h -> aux t acc
+    | h::t -> aux t (h::acc)
+		    in aux l []
+  
+let remove_duplicates l =
+  let rec aux l acc = match l with
+    | [] -> List.rev acc
+    | h :: t -> aux (remove_elt h t) (h::acc)
+		      in aux l []
+
 let rec all_paths e p = match e with
     | Int(a) -> (path (Int(a)) p) :: []
-    | Plus (a, b) -> ((path (Plus (a,b)) p) :: (L (path a p)) :: (R (path b p)) :: [])
-	 ;;
-  let div_by_zero e = raise (Error "Not Implemented Yet")
+    | Plus (a, b) -> remove_duplicates ((path (Plus (a,b)) p) :: (L (path a p)) :: (R (path b p)) :: [])
+    | Minus (a, b) -> remove_duplicates ((path (Minus (a,b)) p) :: (L (path a p)) :: (R (path b p)) :: [])
+    | Times (a, b) -> remove_duplicates ((path (Times (a,b)) p) :: (L (path a p)) :: (R (path b p)) :: [])
+    | Div (a, b) -> remove_duplicates ((path (Div (a,b)) p) :: (L (path a p)) :: (R (path b p)) :: [])
+    | Exp (a, b) -> remove_duplicates ((path (Exp (a,b)) p) :: (L (path a p)) :: (R (path b p)) :: [])
+				       
+;;
+let rec all_paths e p = 
+    let rec aux e p list = match e with
+    | Int(a) -> 
+    | Plus (a, b) ->
+    | Minus (a, b) ->
+    | Times (a, b) ->
+    | Div (a, b) -> 
+    | Exp (a, b) -> 
+				       
 
+let p4 expression = match expression with
+	   | Div (a,b) -> if b = Int(0) then true else false
+	   | _ -> false;;
+  
+let div_by_zero e = 
+    try Some (path e p4) with No_Path -> None;;
+	     
  end;;
 
  module Test = 
