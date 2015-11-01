@@ -57,14 +57,16 @@ struct
   let rec add (t : dict) (l : Elem.t list)  =
 
   let rec add (t : dict) (l : char list) =
+    if t = [] then [list_to_trie l]
+    else
       match (hd t) , (hd l) with
-      | Node(elem,children) , elemi -> if elemi = elem then
-                                         [Node(elem, add children (tl l)]
-                                       else
-                                         if elemi > elem then
-                                           add (tl t) l
-                                         else 
-                                           (list_to_trie l) :: t;;
+        | Node(elem,children) , elemi -> if elemi = elem then
+                                           [Node(elem, add children (tl l))]
+                                         else
+                                           if elemi > elem then
+                                             t @ add (tl t) l
+                                           else 
+                                             (list_to_trie l) :: t;;
   
   (* ------------------------------------------------------------------------ *)
   (* find : Elem.t list -> dict -> bool *)
