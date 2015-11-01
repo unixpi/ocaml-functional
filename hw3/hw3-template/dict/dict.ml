@@ -4,8 +4,8 @@
 (* Copyright © 2015 Brigitte Pientka                                         *)
 (* -------------------------------------------------------------------------- *)  
 (*
-  STUDENT NAME(S):
-  STUDENT ID(S)  :
+  STUDENT NAME(S): Sacha Saint-Leger
+  STUDENT ID(S)  :260473392
 
 
   Fill out the template below.
@@ -46,8 +46,25 @@ struct
   (* Adding a list of elements in a trie ; duplicates are not allowed.        *)
   (* add: dict -> Elem.t list -> dict                                         *)
   (* Invariant: dictionary preserves the order                                *)
+  let rec list_to_trie list = match list with
+    | [] -> End
+    | h::t -> Node(h, [list_to_trie t])
 
-  let rec add (t:dict) (l: Elem.t list)  = raise (Error "Not Implemented Yet")  
+  let hd list = match list with h::t -> h;;
+
+  let tl list = match list with h::t -> t;;
+  
+  let rec add (t : dict) (l : Elem.t list)  =
+    
+  let rec add (t : dict) (l : char list) =
+      match (hd t) (hd l) with
+      | Node(elem,children) , elemi -> if elemi = elem then
+                                         add children (tl l)
+                                       else
+                                         if elemi > elem then
+                                           add (tl t) l
+                                         else 
+                                           (list_to_trie l) :: t;;
 
   (* ------------------------------------------------------------------------ *)
   (* find : Elem.t list -> dict -> bool *)
