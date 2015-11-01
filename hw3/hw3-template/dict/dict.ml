@@ -55,17 +55,17 @@ struct
   let tl list = match list with h::t -> t;;
   
   let rec add (t : dict) (l : Elem.t list)  =
-    
+
   let rec add (t : dict) (l : char list) =
-      match (hd t) (hd l) with
+      match (hd t) , (hd l) with
       | Node(elem,children) , elemi -> if elemi = elem then
-                                         add children (tl l)
+                                         [Node(elem, add children (tl l)]
                                        else
                                          if elemi > elem then
                                            add (tl t) l
                                          else 
                                            (list_to_trie l) :: t;;
-
+  
   (* ------------------------------------------------------------------------ *)
   (* find : Elem.t list -> dict -> bool *)
   let rec find dict elem_list = raise (Error "Not Implemented Yet")
