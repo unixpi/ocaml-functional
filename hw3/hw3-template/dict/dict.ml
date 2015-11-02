@@ -62,7 +62,7 @@ struct
     (* use the line below for testing with char lists *)
     (*  let rec add (t : dict) (l : char list) *)
     if t = [] then [list_to_trie l]
-    else if l = [] then End :: t 		     
+    else if l = [] then t 		     
     else
       match (hd t) , (hd l) with
       | End, _ -> (hd t) :: (list_to_trie l) :: (tl t)
@@ -125,8 +125,9 @@ struct
        | Node(elem,children) -> aux children (aux (tl d) (acc+1))
    in aux d 0;;
    
-       
-
+ let print_number_of_paths x =
+   print_int x;;
+   
  let number_of_paths d =
    let rec aux d acc =
      if (d = []) then acc
@@ -145,5 +146,16 @@ module IdNumbers =  DictTrie(IntLt)
 module Phrases = DictTrie(StringLt)
 module Names = DictTrie(CharLt)
 
+		       (* tests *)
 
+let dict = Names.add (Names.create ()) (CharLt.explode "ace");;
+let dict = Names.add dict (CharLt.explode "ace");;
+let no_elements_in_dict = Names.number_of_elem dict;;
+let no_paths_in_dict = Names.number_of_paths dict;;
 
+let id_dict = IdNumbers.add (IdNumbers.create ()) (IntLt.explode "123");;
+let id_dict = IdNumbers.add id_dict (IntLt.explode "123");;
+let no_elements_in_id_dict = IdNumbers.number_of_elem id_dict;;
+(* should return 4 *)
+let no_paths_in_dict = IdNumbers.number_of_paths id_dict;;
+  (* should return 2 *)
