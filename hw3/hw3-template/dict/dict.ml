@@ -88,7 +88,6 @@ struct
  
 
  let rec find dict elem_list  = 
-   (* let rec find (dict : dict) (elem_list : char list) = *)
     if ((dict = []) && (elem_list != [])) then false else
       if (((hd dict) = End) && (elem_list = [])) then true
       else
@@ -121,7 +120,7 @@ struct
      if (d = []) then acc
      else 
        match (hd d) with
-       | End -> aux (tl d) (acc + 1)
+       | End -> aux (tl d) (acc)
        | Node(elem,children) -> aux children (aux (tl d) (acc+1))
    in aux d 0;;
    
@@ -156,6 +155,12 @@ let no_paths_in_dict = Names.number_of_paths dict;;
 let id_dict = IdNumbers.add (IdNumbers.create ()) (IntLt.explode "123");;
 let id_dict = IdNumbers.add id_dict (IntLt.explode "123");;
 let no_elements_in_id_dict = IdNumbers.number_of_elem id_dict;;
-(* should return 4 *)
 let no_paths_in_dict = IdNumbers.number_of_paths id_dict;;
-  (* should return 2 *)
+let id_dict = IdNumbers.add id_dict (IntLt.explode "1 2 3");;
+let no_paths_in_dict = IdNumbers.number_of_paths id_dict;;
+let no_elements_in_id_dict = IdNumbers.number_of_elem id_dict;;				      
+let id_dict = IdNumbers.add id_dict (IntLt.explode "1 2 3 4");;
+let no_paths_in_dict = IdNumbers.number_of_paths id_dict;;
+(* should return 3 *)
+let no_elements_in_id_dict = IdNumbers.number_of_elem id_dict;;				 (* should return 5 *)            
+				       
