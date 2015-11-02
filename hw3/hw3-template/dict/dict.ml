@@ -66,7 +66,7 @@ struct
                                            [Node(elem, add children (tl l))]
                                          else
                                            if elemi > elem then
-                                             t @ add (tl t) l
+                                             hd(t) :: add (tl t) l
                                            else 
                                              (list_to_trie l) :: t;;
   
