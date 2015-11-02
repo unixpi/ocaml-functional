@@ -22,7 +22,6 @@ sig
   val create : unit -> dict
   val add    : dict -> Elem.t list -> dict
   val find   : dict -> Elem.t list -> bool
-  val iter   : dict -> (trie -> trie) -> (Elem.t -> Elem.t) ->  dict
   val number_of_elem: dict -> int
   val number_of_paths: dict -> int
 end;;
@@ -59,9 +58,8 @@ struct
       |  h :: t -> if  t = [] then [] else (h :: (remove_last2 t));; 
 
 
-  (* use the line below for testing with char lists *)
-
   let rec add (t : dict) (l : Elem.t list)  =
+    (* use the line below for testing with char lists *)
     (*  let rec add (t : dict) (l : char list) *)
     if t = [] then [list_to_trie l]
     else if l = [] then End :: t 		     
@@ -75,8 +73,6 @@ struct
                                              (hd t) :: add (tl t) l
                                            else 
                                              (list_to_trie l) :: t;;
-
-
 
 
 (* testing 
