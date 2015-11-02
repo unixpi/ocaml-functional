@@ -53,23 +53,39 @@ struct
   let hd list = match list with h::t -> h;;
 
   let tl list = match list with h::t -> t;;
-  
-  let rec add (t : dict) (l : Elem.t list)  =
 
-  let rec add (t : dict) (l : char list) =
+  let rec remove_last2 list = match list with
+      | [] -> []
+      |  h :: t -> if  t = [] then [] else (h :: (remove_last2 t));; 
+
+
+  (* use the line below for testing with char lists *)
+
+  let rec add (t : dict) (l : Elem.t list)  =
     if t = [] then [list_to_trie l]
     else if l = [] then End :: t 		     
     else
       match (hd t) , (hd l) with
-        | End, _ -> End :: [list_to_trie l]
+      | End, _ -> (hd t) :: (list_to_trie l) :: (tl t)
         | Node(elem,children) , elemi -> if elemi = elem then
-                                           [Node(elem, add children (tl l))]
+                                           Node(elem, add children (tl l)) :: (tl t)
                                          else
                                            if elemi > elem then
-                                             hd(t) :: add (tl t) l
+                                             (hd t) :: add (tl t) l
                                            else 
                                              (list_to_trie l) :: t;;
-  
+
+
+
+
+(* testing 
+ let dict = add [] ['a';'c';'e'];;
+ let dict = add dict ['a';'c';'e';'a'];;
+ let dict = add dict ['a';'l';'l';'e';'y'];;
+ let dict = add dict ['a';'l';'e'];;
+ let dict = add dict ['a';'l';'e';'x'];;
+
+ *)
   (* ------------------------------------------------------------------------ *)
   (* find : Elem.t list -> dict -> bool *)
   let rec find dict elem_list = raise (Error "Not Implemented Yet")
