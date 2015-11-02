@@ -58,10 +58,10 @@ struct
 
   let rec add (t : dict) (l : char list) =
     if t = [] then [list_to_trie l]
-    else if l = [] then t 		     
+    else if l = [] then End :: t 		     
     else
       match (hd t) , (hd l) with
-        | End, _ -> [list_to_trie l]
+        | End, _ -> End :: [list_to_trie l]
         | Node(elem,children) , elemi -> if elemi = elem then
                                            [Node(elem, add children (tl l))]
                                          else
