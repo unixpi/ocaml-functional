@@ -22,9 +22,9 @@ sig
   val create : unit -> dict
   val add    : dict -> Elem.t list -> dict
   val find   : dict -> Elem.t list -> bool
-  val iter   : dict -> (unit -> unit) -> (Elem.t -> unit) ->  unit
+  val iter   : dict -> (trie -> trie) -> (Elem.t -> Elem.t) ->  dict
   val number_of_elem: dict -> int
-  val max_path: dict -> int
+  val number_of_paths: dict -> int
 end;;
 
 module DictTrie(K : ORDERED) : (DICT with type Elem.t = K.t) = 
@@ -111,11 +111,35 @@ struct
 
 
   (* ------------------------------------------------------------------------ *)
-  let rec iter dict g f = raise (Error "Not Implemented Yet")
+ let rec iter dict g f = 
+   if (dict = []) then [] else
+     match (hd dict) with
+       | End -> (g End) :: iter (tl dict) g f
+       | Node(elem,children) -> Node(f elem, iter children g f) :: iter (tl dict) g f
+ ;;
+ (*  let rec iter (dict : dict) (g : (unit -> unit)) (f : char -> unit) = *)
+ 
+     
+ let number_of_elem d =
+   let rec aux d acc =
+     if (d = []) then acc
+     else 
+       match (hd d) with
+       | End -> aux (tl d) (acc + 1)
+       | Node(elem,children) -> aux children (aux (tl d) (acc+1))
+   in aux d 0;;
+   
+       
 
-   let number_of_elem d = raise (Error "Not Implemented Yet")
-
-   let max_elem d = raise (Error "Not Implemented Yet")
+ let number_of_paths d =
+   let rec aux d acc =
+     if (d = []) then acc
+     else 
+       match (hd d) with
+       | End -> aux (tl d) (acc + 1)
+       | Node(elem,children) -> aux children (aux (tl d) (acc))
+   in aux d 0;;
+   
 
 end
 
