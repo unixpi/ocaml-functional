@@ -62,6 +62,7 @@ struct
   (* use the line below for testing with char lists *)
 
   let rec add (t : dict) (l : Elem.t list)  =
+    (*  let rec add (t : dict) (l : char list) *)
     if t = [] then [list_to_trie l]
     else if l = [] then End :: t 		     
     else
@@ -88,7 +89,25 @@ struct
  *)
   (* ------------------------------------------------------------------------ *)
   (* find : Elem.t list -> dict -> bool *)
-  let rec find dict elem_list = raise (Error "Not Implemented Yet")
+ 
+
+ let rec find dict elem_list  = 
+   (* let rec find (dict : dict) (elem_list : char list) = *)
+    if ((dict = []) && (elem_list != [])) then false else
+      if (((hd dict) = End) && (elem_list = [])) then true
+      else
+        if (elem_list = []) then false
+        else
+	  match (hd dict) , (hd elem_list) with
+          | End, elemf -> find (tl dict) elem_list
+          | Node(elem,children), elemf -> if (elemf = elem) then
+	              			    find children (tl elem_list)
+				          else
+				            if (elemf > elem) then
+					      find (tl dict) elem_list
+				            else (* elemf < elem *)
+					      false;;
+					
 
 
   (* ------------------------------------------------------------------------ *)
