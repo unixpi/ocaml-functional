@@ -146,7 +146,7 @@ module Phrases = DictTrie(StringLt)
 module Names = DictTrie(CharLt)
 
 		       (* tests *)
-
+(*
 let dict = Names.add (Names.create ()) (CharLt.explode "ace");;
 let dict = Names.add dict (CharLt.explode "ace");;
 let no_elements_in_dict = Names.number_of_elem dict;;
@@ -164,3 +164,4 @@ let no_paths_in_dict = IdNumbers.number_of_paths id_dict;;
 (* should return 3 *)
 let no_elements_in_id_dict = IdNumbers.number_of_elem id_dict;;				 (* should return 5 *)            
 				       
+ *)

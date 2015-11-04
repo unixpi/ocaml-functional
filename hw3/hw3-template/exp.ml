@@ -47,7 +47,7 @@ module type EXP =
 end
 
 
- module ArithExp : EXP = 
+module ArithExp : EXP = 
  struct
   type exp = 
     | Plus  of exp * exp 
@@ -71,7 +71,7 @@ end
     | Div(e1, e2) -> eval e1 / eval e2
     | Exp(e1, e2) -> truncate ((float (eval e1)) ** (float (eval e2)))
 
-    let rec path e p = match e with
+  let rec path e p = match e with
     | Int(a) -> if p (Int(a)) then H else raise No_Path
     | Plus (a, b) -> if p (Plus (a, b)) then H
  		   else
@@ -88,31 +88,31 @@ end
     | Exp (a, b) -> if p (Exp (a, b)) then H
  		   else
 		     try L (path a p) with No_Path -> R (path b p)
-;; 
 
-let remove_elt e l =
-  let rec aux l acc = match l with
-    | [] -> List.rev acc
-    | h::t when e = h -> aux t acc
-    | h::t -> aux t (h::acc)
+
+  let remove_elt e l =
+    let rec aux l acc = match l with
+      | [] -> List.rev acc
+      | h::t when e = h -> aux t acc
+      | h::t -> aux t (h::acc)
 		    in aux l []
   
-let remove_duplicates l =
-  let rec aux l acc = match l with
-    | [] -> List.rev acc
-    | h :: t -> aux (remove_elt h t) (h::acc)
+  let remove_duplicates l =
+    let rec aux l acc = match l with
+      | [] -> List.rev acc
+      | h :: t -> aux (remove_elt h t) (h::acc)
 		      in aux l []
 
-let rec all_paths e p = match e with
-    | Int(a) -> (path (Int(a)) p) :: []
-    | Plus (a, b) -> remove_duplicates ((path (Plus (a,b)) p) :: (L (path a p)) :: (R (path b p)) :: [])
-    | Minus (a, b) -> remove_duplicates ((path (Minus (a,b)) p) :: (L (path a p)) :: (R (path b p)) :: [])
-    | Times (a, b) -> remove_duplicates ((path (Times (a,b)) p) :: (L (path a p)) :: (R (path b p)) :: [])
-    | Div (a, b) -> remove_duplicates ((path (Div (a,b)) p) :: (L (path a p)) :: (R (path b p)) :: [])
-    | Exp (a, b) -> remove_duplicates ((path (Exp (a,b)) p) :: (L (path a p)) :: (R (path b p)) :: [])
+  let rec all_paths e p = match e with
+      | Int(a) -> (path (Int(a)) p) :: []
+      | Plus (a, b) -> remove_duplicates ((path (Plus (a,b)) p) :: (L (path a p)) :: (R (path b p)) :: [])
+      | Minus (a, b) -> remove_duplicates ((path (Minus (a,b)) p) :: (L (path a p)) :: (R (path b p)) :: [])
+      | Times (a, b) -> remove_duplicates ((path (Times (a,b)) p) :: (L (path a p)) :: (R (path b p)) :: [])
+      | Div (a, b) -> remove_duplicates ((path (Div (a,b)) p) :: (L (path a p)) :: (R (path b p)) :: [])
+      | Exp (a, b) -> remove_duplicates ((path (Exp (a,b)) p) :: (L (path a p)) :: (R (path b p)) :: [])
 				       
-;;
-let rec all_paths e p = 
+(*
+  let rec all_paths e p = 
     let rec aux e p list = match e with
     | Int(a) -> 
     | Plus (a, b) ->
@@ -120,27 +120,29 @@ let rec all_paths e p =
     | Times (a, b) ->
     | Div (a, b) -> 
     | Exp (a, b) -> 
-				       
+ *)				       
 
-let p4 expression = match expression with
+  let p4 expression = match expression with
 	   | Div (a,b) -> if b = Int(0) then true else false
 	   | _ -> false;;
   
-let div_by_zero e = 
-    try Some (path e p4) with No_Path -> None;;
+  let div_by_zero e = 
+    try Some (path e p4) with No_Path -> None
 	     
- end;;
+end
 
  module Test = 
  struct
    open ArithExp
-   let p1 expression =
+(*   let p1 expression =
      expression = Int(3);;
    let p2 expression =
      expression = Times(Int(10), Int(5));;
    let e1 = Plus(Times(Int(3), Int(2)), Div(Times(Int(10), Int(5)), Int(0)))
   let e2 = Plus(Times(Int(3), Int(2)), Div(Times(Int(10), Int(5)), Times(Int(3), Int(2))))
 ;;
-   path e1 p1;; (* should return L(L(H))) *)		
+   path e1 p1;; (* should return L L H *)		
    path e1 p2;; (* should return R(L(H)) *)
+
+ *)
  end 
