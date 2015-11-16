@@ -1,0 +1,65 @@
+(* ------------------------------------------------------------------------- *)
+(* Author: Brigitte Pientka                                                  *)
+(* COMP 302 Programming Languages - FALL 2015                                *)
+(* Copyright © 2015 Brigitte Pientka                                        *)
+(* ------------------------------------------------------------------------- *)
+(*
+  STUDENT NAME(S):
+  STUDENT ID(S)  :
+
+
+  Fill out the template below.
+
+*)
+module type STREAM = 
+  sig
+    type 'a susp = Susp of (unit -> 'a)
+    type 'a str = {hd: 'a  ; tl : ('a str) susp} 
+
+    val force: 'a susp -> 'a
+    val map  : ('a -> 'b) -> 'a str -> 'b str 
+    val take : int -> 'a str -> 'a list
+  end 
+
+
+module Stream : STREAM = 
+  struct
+    (* Suspended computation *)
+    type 'a susp = Susp of (unit -> 'a)
+
+    (* force: *)
+    let force (Susp f) = f ()
+
+    type 'a str = {hd: 'a  ; tl : ('a str) susp} 
+
+    (* map: ('a -> 'b) -> 'a str -> 'b str *)
+    let rec map f s = 
+      { hd = f (s.hd) ; 
+	tl = Susp (fun () -> map f (force s.tl))
+}
+
+    (* Inspect a stream up to n elements *)
+    let rec take n s = match n with 
+      | 0 -> []
+      | n -> s.hd :: take (n-1) (force s.tl)
+	  
+  end 
+
+
+
+module type BIN = 
+ sig
+   type bit = Zero | One | End
+   type bin = int list
+
+   val bin_str : bin Stream.str 
+   val send_str : bin Stream.str -> bit Stream.str
+   val rcv_str : bit Stream.str -> bin Stream.str
+   val to_int  : bin Stream.str -> int Stream.str
+       
+ end 
+
+
+
+(* Implement a module Bin that matches the signature BIN and provides 
+   all the necessary functionality *)

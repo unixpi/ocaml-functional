@@ -1,6 +1,0 @@
-
-let rec last = function
-  | [] -> None
-  | a :: [] -> a
-  | a :: rest -> last rest ;;
-  
