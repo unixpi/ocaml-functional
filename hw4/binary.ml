@@ -81,7 +81,8 @@ module Bin : BIN =
    let add_one a = rev (add_one_binary (rev  a))
 
    let rec bin_str_from b =
-     { Stream.hd = b ;							                               Stream.tl = Susp (fun () -> bin_str_from (add_one b))
+     { Stream.hd = b ;
+       Stream.tl = Susp (fun () -> bin_str_from (add_one b))
      }
 		
    let bin_str = bin_str_from [1]
