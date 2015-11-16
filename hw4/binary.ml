@@ -52,9 +52,10 @@ module type BIN =
    type bit = Zero | One | End
    type bin = int list
 
-   val bin_str : bin Stream.str 
-(*   val send_str : bin Stream.str -> bit Stream.str
-   val rcv_str : bit Stream.str -> bin Stream.str
+   val bin_str : bin Stream.str
+   val send_str_proto : int list Stream.str -> bit list Stream.str
+   val send_str : bin Stream.str -> bit Stream.str 
+(*   val rcv_str : bit Stream.str -> bin Stream.str
    val to_int  : bin Stream.str -> int Stream.str
  *)
  end 
@@ -86,8 +87,38 @@ module Bin : BIN =
      }
 		
    let bin_str = bin_str_from [1]
+
+   let rec bin_to_bit_proto bin = (* [1] -> [Bin.One; Bin.End] *)
+     match bin with
+     | [] -> End :: []
+     | 0 :: t -> Zero :: bin_to_bit t
+     | 1 :: t -> One :: bin_to_bit t
 			      
-    		     
+   let send_str_proto s = Stream.map bin_to_bit_proto s ;;
+
+   let bin_to_bit bin = match bin with
+     | 0  -> Zero
+     | 1  -> One
+
+   let head l = match l with
+     | h::t -> h
+
+   let tail l = match l with
+     | h::t -> t
+	      
+   let rec send_str s =
+     let t = tail(s.Stream.hd) in
+     if t = [] then
+       {Stream.hd = bin_to_bit (head(s.Stream.hd));
+	Stream.tl = Susp (send_str (Stream.force s.Stream.tl))
+       }
+     else  
+       let h = head(s.Stream.hd) in
+       {Stream.hd = bin_to_bit h ;
+        Stream.tl = Susp (send_str {Stream.hd = tail(s.Stream.hd);
+				    Stream.tl = s.Stream.tl
+				   })}
+								
      
-  end
+ end
     
