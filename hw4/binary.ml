@@ -101,14 +101,15 @@ module Bin : BIN =
      let t = tail(s.Stream.hd) in
      if t = [] then
        {Stream.hd = bin_to_bit (head(s.Stream.hd));
-	Stream.tl = Susp (fun () -> send_str (Stream.force s.Stream.tl))
+	Stream.tl = Susp (fun () -> {Stream.hd = End;
+			             Stream.tl = Susp (fun() -> send_str (Stream.force s.Stream.tl))})
        }
      else  
        let h = head(s.Stream.hd) in
        {Stream.hd = bin_to_bit h ;
         Stream.tl = Susp (fun () -> send_str {Stream.hd = tail(s.Stream.hd);
-				    Stream.tl = s.Stream.tl
-				   })}
+				              Stream.tl = s.Stream.tl
+				             })}
 								
      
  end
