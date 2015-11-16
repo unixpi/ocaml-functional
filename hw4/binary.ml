@@ -131,6 +131,17 @@ module Bin : BIN =
      {Stream.hd = get_bin_from_bit_stream s;
       Stream.tl = Susp (fun () -> rcv_str (next_starting_point s))
      }
+
+   let rec pow x n = match n with
+     | 0 -> 1
+     | _ -> x * (pow x (n-1)) 
+     
+   let rec rbin_to_int rbin n = match rbin with
+     | [] -> 0
+     | 0::t -> 0 + (rbin_to_int t (n+1))
+     | 1::t -> (pow 2 n) + (rbin_to_int t (n+1)) 
+     
+   let rec to_int =
      
      
      
