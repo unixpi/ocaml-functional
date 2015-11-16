@@ -54,8 +54,8 @@ module type BIN =
 
    val bin_str : bin Stream.str
    val send_str : bin Stream.str -> bit Stream.str 
-(*   val rcv_str : bit Stream.str -> bin Stream.str
-   val to_int  : bin Stream.str -> int Stream.str
+   val rcv_str : bit Stream.str -> bin Stream.str
+  (*  val to_int  : bin Stream.str -> int Stream.str
  *)
  end 
 
@@ -110,7 +110,29 @@ module Bin : BIN =
         Stream.tl = Susp (fun () -> send_str {Stream.hd = tail(s.Stream.hd);
 				              Stream.tl = s.Stream.tl
 				             })}
-								
+
+   let bit_to_bin bit = match bit with
+     | Zero -> 0
+     | One -> 1
+
+   let rec get_bin_from_bit_stream s =
+     let b = s.Stream.hd in
+     match b with
+     | End -> []
+     | bit -> (bit_to_bin bit) :: get_bin_from_bit_stream (Stream.force s.Stream.tl)
+
+   let rec next_starting_point s =
+     let b = s.Stream.hd in
+     match b with
+     | End -> Stream.force s.Stream.tl
+     | bit -> next_starting_point (Stream.force s.Stream.tl)
+		
+   let rec rcv_str s =
+     {Stream.hd = get_bin_from_bit_stream s;
+      Stream.tl = Susp (fun () -> rcv_str (next_starting_point s))
+     }
+     
+     
      
  end
     
