@@ -55,8 +55,8 @@ module type BIN =
    val bin_str : bin Stream.str
    val send_str : bin Stream.str -> bit Stream.str 
    val rcv_str : bit Stream.str -> bin Stream.str
-  (*  val to_int  : bin Stream.str -> int Stream.str
- *)
+   val to_int  : bin Stream.str -> int Stream.str
+ 
  end 
 
 (* Implement a module Bin that matches the signature BIN and provides 
@@ -136,12 +136,14 @@ module Bin : BIN =
      | 0 -> 1
      | _ -> x * (pow x (n-1)) 
      
-   let rec rbin_to_int rbin n = match rbin with
+   let bin_to_int bin  =
+     let rec rbin_to_int rbin n  = match rbin with
      | [] -> 0
      | 0::t -> 0 + (rbin_to_int t (n+1))
-     | 1::t -> (pow 2 n) + (rbin_to_int t (n+1)) 
+     | 1::t -> (pow 2 n) + (rbin_to_int t (n+1))
+     in rbin_to_int (rev bin) 0
      
-   let rec to_int =
+   let to_int s = Stream.map bin_to_int s;;
      
      
      
