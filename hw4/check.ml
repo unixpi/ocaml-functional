@@ -23,11 +23,6 @@ struct
   type 'a args = 'a list
   type 'a condition = 'a args -> bool
 
-
-  (* Check whether all conditions in cond are satisfied *)
-  let hd l = match l with
-    | h::t -> h
-
   let rec check_all_conditions cond l = match cond with
     | [] -> true
     | h::t -> if h l then check_all_conditions t l else false
@@ -47,6 +42,11 @@ struct
 
   (* find all input combinations that satisfy a given list of conditions *)
   let find_all (l: ('a input) list) (cond : ('a condition) list) = 
-    raise Error
+    let rec find_another l cond acc = match l with
+      | [[]; l2] -> acc
+      | [h1::t1; l2]  -> let return_val = (check_all_combinations cond h1 l2) in
+			 if (return_val = []) then find_another [t1;l2] cond acc
+			 else find_another [t1;l2] cond (acc @ [return_val]) 
+    in find_another l cond []		  
 
 end
