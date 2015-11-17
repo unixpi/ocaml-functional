@@ -30,11 +30,16 @@ struct
   let rec check_all_combinations cond a l  = match l with
     | [] -> []
     | h::t -> if (check_all_conditions cond [a;h]) then [a;h]
-	      else check_all_combinations cond a t		
+	      else check_all_combinations cond a t
+
+  let rec return_all_valid_combinations cond a l = match l with
+    | [] -> []
+    | h::t -> if (check_all_conditions cond [a;h]) then [a;h] :: (return_all_valid_combinations cond a t)
+	      else return_all_valid_combinations cond a t
       
   let find (l: ('a input) list) (cond : ('a condition) list) = 
     let rec findb l cond acc = match l with
-      | [[]; l2] -> []
+      | [[]; l2] -> acc ()
       | [h1::t1; l2]  -> let return_val = (check_all_combinations cond h1 l2) in
 			 if (return_val = []) then findb [t1;l2] cond acc
 			 else return_val
@@ -42,11 +47,10 @@ struct
 
   (* find all input combinations that satisfy a given list of conditions *)
   let find_all (l: ('a input) list) (cond : ('a condition) list) = 
-    let rec find_another l cond acc = match l with
+    let rec findb l cond acc = match l with
       | [[]; l2] -> acc
-      | [h1::t1; l2]  -> let return_val = (check_all_combinations cond h1 l2) in
-			 if (return_val = []) then find_another [t1;l2] cond acc
-			 else find_another [t1;l2] cond (acc @ [return_val]) 
-    in find_another l cond []		  
+      | [h1::t1; l2]  -> let return_val = (return_all_valid_combinations cond h1 l2) in
+			 findb [t1;l2] cond (return_val @ acc)
+    in findb l cond []		  
 
 end
