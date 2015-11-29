@@ -66,24 +66,23 @@ end
 	   string_of_int (!counter) ^ x)
 
   let rec fv (e : exp) : var list = match e with
-    | Int n -> [] 
-    | Plus(e1, e2) -> (fv e1) 
-    | Minus(e1, e2) ->
-    | Times(e1, e2) ->
-    | Div(e1, e2) -> 
-    | Eq(e1, e2) ->
-    | Lt(e1,e2) ->
-    | And(e1,e2) ->
-    | Or(e1,e2) ->
-    | Not(e1) ->
-    | Trunc(e1) ->
-    | ToFloat(e1) ->
-    | Int a ->
-    | Float a ->
-    | Bool a ->
-    | If_then_Else(e1,e2,e3) ->
-    | Sum(e1,e2,(x,e3)) ->
-    | Var x ->
+    | Plus(e1, e2) -> (fv e1) :: (fv e2) 
+    | Minus(e1, e2) -> (fv e1) :: (fv e2)
+    | Times(e1, e2) -> (fv e1) :: (fv e2)
+    | Div(e1, e2) ->  (fv e1) :: (fv e2)
+    | Eq(e1, e2) -> (fv e1) :: (fv e2)
+    | Lt(e1,e2) -> (fv e1) :: (fv e2)
+    | And(e1,e2) -> (fv e1) :: (fv e2)
+    | Or(e1,e2) -> (fv e1) :: (fv e2)
+    | Not(e1) -> (fv e1)
+    | Trunc(e1) -> (fv e1)
+    | ToFloat(e1) -> (fv el)
+    | Int n -> []
+    | Float n -> []
+    | Bool p -> []
+    | If_then_Else(e1,e2,e3) -> (fv e1) :: (fv e2) :: (fv e3)
+    | Sum(e1,e2,(x,e3)) -> (fv e1) :: (fv e2) :: (fv e3) :: [x]
+    | Var x -> [x]
 
 
   let rec subst (e,x : exp * var) (e' : exp) : exp = raise (Error "Not Implemented - Your Task!")
