@@ -63,8 +63,18 @@ end
     let counter = ref 0 in
       (fun x ->
 	 let _ = counter := !counter+1 in
-	   string_of_int (!counter) ^ x)
+	 string_of_int (!counter) ^ x)
 
+  let flatten list =
+    let rec aux acc = function
+      | [] -> acc
+      | One x :: t -> aux (x :: acc) t
+      | Many l :: t -> aux (aux acc l) t in List.rev (aux [] list)
+
+  let rec remove a l = match l with
+    | [] -> []
+    | h :: t -> if (h = a) then remove a t else h :: remove a t
+	
   let rec fv (e : exp) : var list = match e with
     | Plus(e1, e2) -> (fv e1) :: (fv e2) 
     | Minus(e1, e2) -> (fv e1) :: (fv e2)
@@ -81,7 +91,7 @@ end
     | Float n -> []
     | Bool p -> []
     | If_then_Else(e1,e2,e3) -> (fv e1) :: (fv e2) :: (fv e3)
-    | Sum(e1,e2,(x,e3)) -> (fv e1) :: (fv e2) :: (fv e3) :: [x]
+    | Sum(e1,e2,(x,e3)) -> (fv e1) :: (fv e2) :: ((fv e3)
     | Var x -> [x]
 
 
