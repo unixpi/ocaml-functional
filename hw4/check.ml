@@ -1,3 +1,5 @@
+(* Sacha Saint-Leger 260473392 *)
+
 module type CHECK = 
 sig
 
@@ -23,34 +25,40 @@ struct
   type 'a args = 'a list
   type 'a condition = 'a args -> bool
 
-  let rec check_all_conditions cond l = match cond with
+  let rec fold_right f l a = match l with
+    | [] -> a
+    | h::t -> f h (fold_right f t a)
+    
+  let rec map f l = match l with
+    | [] -> []
+    | h :: t -> (f h) :: map f t
+			     
+  let rec concat ll = match ll with
+    | [] -> []
+    | h :: t -> h @ concat t
+    
+  let rec filter p l = match l with
+      | [] -> []
+      | h :: t -> if p h then h :: filter p t else filter p t
+	      
+  let rec check_conditions cond l = match cond with
     | [] -> true
-    | h::t -> if h l then check_all_conditions t l else false
+    | h::t -> if h l then check_conditions t l else false
 
-  let rec check_all_combinations cond a l  = match l with
+  let rec return_first cond ll = match ll with
     | [] -> []
-    | h::t -> if (check_all_conditions cond [a;h]) then [a;h]
-	      else check_all_combinations cond a t
+    | h :: t -> if (check_conditions cond h) then h else return_first cond t
+						      
+  let combinations l =
+    fold_right (fun h t -> concat (map (fun h1 -> 
+                                              map (fun t1 -> h1 :: t1) t) h)) l [[]];;
 
-  let rec return_all_valid_combinations cond a l = match l with
-    | [] -> []
-    | h::t -> if (check_all_conditions cond [a;h]) then [a;h] :: (return_all_valid_combinations cond a t)
-	      else return_all_valid_combinations cond a t
-      
-  let find (l: ('a input) list) (cond : ('a condition) list) = 
-    let rec findb l cond acc = match l with
-      | [[]; l2] -> acc ()
-      | [h1::t1; l2]  -> let return_val = (check_all_combinations cond h1 l2) in
-			 if (return_val = []) then findb [t1;l2] cond acc
-			 else return_val
-    in findb l cond (fun () -> [])		  
-
-  (* find all input combinations that satisfy a given list of conditions *)
+  let find (l: ('a input) list) (cond : ('a condition) list) =
+    let perms = combinations l in
+    return_first cond perms
+		 
   let find_all (l: ('a input) list) (cond : ('a condition) list) = 
-    let rec findb l cond acc = match l with
-      | [[]; l2] -> acc
-      | [h1::t1; l2]  -> let return_val = (return_all_valid_combinations cond h1 l2) in
-			 findb [t1;l2] cond (return_val @ acc)
-    in findb l cond []		  
-
+    let perms = combinations l in
+    filter (check_conditions cond) perms;;
+  
 end
