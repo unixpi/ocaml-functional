@@ -65,24 +65,22 @@ end
 	 let _ = counter := !counter+1 in
 	 string_of_int (!counter) ^ x)
 
-  let flatten list =
-    let rec aux acc = function
-      | [] -> acc
-      | One x :: t -> aux (x :: acc) t
-      | Many l :: t -> aux (aux acc l) t in List.rev (aux [] list)
-
   let rec remove a l = match l with
     | [] -> []
     | h :: t -> if (h = a) then remove a t else h :: remove a t
 
-  let rec union l1 l2 = 
-	
+  
+  let rec remove_duplicates list = match list with
+    | [] -> []
+    | h :: t -> (h :: remove_duplicates (remove h t))
+  
+ 
   let rec fv (e : exp) : var list = match e with
-    | Plus(e1, e2) -> (fv e1) @ (fv e2) 
-    | Minus(e1, e2) -> (fv e1) @ (fv e2)
-    | Times(e1, e2) -> (fv e1) @ (fv e2)
-    | Div(e1, e2) ->  (fv e1) @ (fv e2)
-    | Eq(e1, e2) -> (fv e1) @ (fv e2)
+    | Plus(e1, e2) -> remove_duplicate((fv e1) @ (fv e2))
+    | Minus(e1, e2) -> remove_duplicates((fv e1) @ (fv e2))
+    | Times(e1, e2) -> remove_duplicate((fv e1) @ (fv e2))
+    | Div(e1, e2) -> remove_duplicates((fv e1) @ (fv e2))
+    | Eq(e1, e2) -> remove_duplicate((fv e1) @ (fv e2))
     | Lt(e1,e2) -> (fv e1) @ (fv e2)
     | And(e1,e2) -> (fv e1) @ (fv e2)
     | Or(e1,e2) -> (fv e1) @ (fv e2)
