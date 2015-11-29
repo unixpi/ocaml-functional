@@ -74,24 +74,26 @@ end
   let rec remove a l = match l with
     | [] -> []
     | h :: t -> if (h = a) then remove a t else h :: remove a t
+
+  let rec union l1 l2 = 
 	
   let rec fv (e : exp) : var list = match e with
-    | Plus(e1, e2) -> (fv e1) :: (fv e2) 
-    | Minus(e1, e2) -> (fv e1) :: (fv e2)
-    | Times(e1, e2) -> (fv e1) :: (fv e2)
-    | Div(e1, e2) ->  (fv e1) :: (fv e2)
-    | Eq(e1, e2) -> (fv e1) :: (fv e2)
-    | Lt(e1,e2) -> (fv e1) :: (fv e2)
-    | And(e1,e2) -> (fv e1) :: (fv e2)
-    | Or(e1,e2) -> (fv e1) :: (fv e2)
+    | Plus(e1, e2) -> (fv e1) @ (fv e2) 
+    | Minus(e1, e2) -> (fv e1) @ (fv e2)
+    | Times(e1, e2) -> (fv e1) @ (fv e2)
+    | Div(e1, e2) ->  (fv e1) @ (fv e2)
+    | Eq(e1, e2) -> (fv e1) @ (fv e2)
+    | Lt(e1,e2) -> (fv e1) @ (fv e2)
+    | And(e1,e2) -> (fv e1) @ (fv e2)
+    | Or(e1,e2) -> (fv e1) @ (fv e2)
     | Not(e1) -> (fv e1)
     | Trunc(e1) -> (fv e1)
-    | ToFloat(e1) -> (fv el)
+    | ToFloat(e1) -> (fv e1)
     | Int n -> []
     | Float n -> []
     | Bool p -> []
-    | If_then_Else(e1,e2,e3) -> (fv e1) :: (fv e2) :: (fv e3)
-    | Sum(e1,e2,(x,e3)) -> (fv e1) :: (fv e2) :: ((fv e3)
+    | If_Then_Else(e1,e2,e3) -> (fv e1) @ (fv e2) @ (fv e3)
+    | Sum(e1,e2,(x,e3)) -> (fv e1) @ (fv e2) @ (remove x (fv e3))
     | Var x -> [x]
 
 
