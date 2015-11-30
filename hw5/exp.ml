@@ -73,7 +73,10 @@ end
   let rec remove_duplicates list = match list with
     | [] -> []
     | h :: t -> (h :: remove_duplicates (remove h t))
-  
+
+  let rec contains e l = match l with
+    | [] -> false
+    | h :: t -> if e=h then true else contains e t
  
   let rec fv (e : exp) : var list = match e with
     | Plus(e1, e2) -> remove_duplicates((fv e1) @ (fv e2))
@@ -111,7 +114,11 @@ end
     | Float n -> Float n
     | Bool p -> Bool p
     | If_Then_Else(e1,e2,e3) -> If_Then_Else(subst (e,x) e1, subst (e,x) e2, subst (e,x) e3) 
-    | Sum(e1,e2,(y,e3)) -> Sum(subst (e,x) e1, subst (e,x) e2, (y, subst (e,x) e3)) 
+    | Sum(e1,e2,(y,e3)) -> if ( contains x (fv (Sum(e1,e2,(y,e3))))) then 
+                             (Sum(subst (e,x) e1, subst (e,x) e2, (y, subst (e,x) e3)))
+			   else
+			     (Sum(subst (e,x) e1, subst (e,x) e2, (y, e3)))
+			     
     | Var y -> if y = x then e else Var y
 
     
