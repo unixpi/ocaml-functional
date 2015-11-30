@@ -95,7 +95,26 @@ end
     | Var x -> [x]
 
 
-  let rec subst (e,x : exp * var) (e' : exp) : exp = raise (Error "Not Implemented - Your Task!")
+  let rec subst (e,x : exp * var) (e' : exp) : exp = match e' with
+    | Plus(e1, e2) -> Plus(subst (e,x) e1, subst (e,x) e2)
+    | Minus(e1, e2) -> Minus(subst (e,x) e1, subst (e,x) e2)
+    | Times(e1, e2) -> Times(subst (e,x) e1, subst (e,x) e2)
+    | Div(e1, e2) -> Div(subst (e,x) e1, subst (e,x) e2)
+    | Eq(e1, e2) -> Eq(subst (e,x) e1, subst (e,x) e2)
+    | Lt(e1,e2) -> Lt(subst (e,x) e1, subst (e,x) e2)
+    | And(e1,e2) -> And(subst (e,x) e1, subst (e,x) e2)
+    | Or(e1,e2) -> Or(subst (e,x) e1, subst (e,x) e2)
+    | Not(e1) -> Not(subst (e,x) e1)
+    | Trunc(e1) -> Trunc(subst (e,x) e1)
+    | ToFloat(e1) -> ToFloat(subst (e,x) e1)
+    | Int n -> Int n
+    | Float n -> Float n
+    | Bool p -> Bool p
+    | If_Then_Else(e1,e2,e3) -> If_Then_Else(subst (e,x) e1, subst (e,x) e2, subst (e,x) e3) 
+    | Sum(e1,e2,(x,e3)) -> 
+    | Var x -> 
+
+    
 
   let rec eval (e : exp) : exp = raise (Error "Not Implemented - Your Task!")
 
