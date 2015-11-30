@@ -111,8 +111,8 @@ end
     | Float n -> Float n
     | Bool p -> Bool p
     | If_Then_Else(e1,e2,e3) -> If_Then_Else(subst (e,x) e1, subst (e,x) e2, subst (e,x) e3) 
-    | Sum(e1,e2,(x,e3)) -> 
-    | Var x -> 
+    | Sum(e1,e2,(x,e3)) -> Int 4
+    | Var y -> if y = x then e else Var y
 
     
 
