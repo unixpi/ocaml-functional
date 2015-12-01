@@ -125,7 +125,9 @@ end
 
   let rec eval (e : exp) : exp = raise (Error "Not Implemented - Your Task!")
 
-
+  let rec contains1 v tuplelist = match tuplelist with
+    | [] -> raise (Error "Variable Unbound")
+    | (v1,tp) :: tl -> if (v = v1) then tp else contains1 v tl 
 				     
   let rec infer (ctx : (var * tp) list) (e : exp) : tp = match e with
     | Plus(e1, e2) -> (match infer ctx e1, infer ctx e2 with
@@ -164,9 +166,9 @@ end
     | Sum(e1,e2,(y,e3)) -> (match infer ctx e1, infer ctx e2, infer ((y, INT) :: ctx) e3 with
 			    | INT, INT , FLOAT -> FLOAT
 			    | INT, INT, INT -> INT
-			    | _ , _ -> raise (Error "Ill-Typed")
+			    | _ , _  , _ -> raise (Error "Ill-Typed"))
  
-    | Var y ->  
+    | Var y ->  contains1 y ctx
 		  
   let infer e = infer [] e
 		      
