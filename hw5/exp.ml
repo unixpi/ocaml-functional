@@ -161,8 +161,9 @@ end
     | If_Then_Else(e1,e2,e3) -> let t = infer ctx e2 in
 				if (infer ctx e1 = BOOL && t = infer ctx e3) then t
 						    else raise (Error "Ill-Typed")
-    | Sum(e1,e2,(y,e3)) -> (match infer ctx e1, infer ctx e2 with
-			    | INT, INT -> 
+    | Sum(e1,e2,(y,e3)) -> (match infer ctx e1, infer ctx e2, infer ((y, INT) :: ctx) e3 with
+			    | INT, INT , FLOAT -> FLOAT
+			    | INT, INT, INT -> INT
 			    | _ , _ -> raise (Error "Ill-Typed")
  
     | Var y ->  
