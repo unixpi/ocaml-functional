@@ -125,10 +125,47 @@ end
 
   let rec eval (e : exp) : exp = raise (Error "Not Implemented - Your Task!")
 
-  let rec infer (ctx : (var * tp) list) (e : exp) : tp = raise (Error "Not Implemented - Your Task!")
 
+				     
+  let rec infer (ctx : (var * tp) list) (e : exp) : tp = match e with
+    | Plus(e1, e2) -> (match infer ctx e1, infer ctx e2 with
+		       | FLOAT, FLOAT -> FLOAT
+		       | INT, INT -> INT
+		       | _ , _ -> raise (Error "Ill-Typed!"))
+    | Minus(e1, e2) ->  (match infer ctx e1, infer ctx e2 with
+		       | FLOAT, FLOAT -> FLOAT
+		       | INT, INT -> INT
+		       | _ , _ -> raise (Error "Ill-Typed!"))
+    | Times(e1, e2) -> (match infer ctx e1, infer ctx e2 with
+		       | FLOAT, FLOAT -> FLOAT
+		       | INT, INT -> INT
+		       | _ , _ -> raise (Error "Ill-Typed!"))
+    | Div(e1, e2) -> (match infer ctx e1, infer ctx e2 with
+		       | FLOAT, FLOAT -> FLOAT
+		       | INT, INT -> INT
+		       | _ , _ -> raise (Error "Ill-Typed!"))
+    | Eq(e1, e2) -> let t = infer ctx e1 in
+		    if t = (infer ctx e2) then BOOL else raise (Error "Ill-Typed")
+    | Lt(e1,e2) ->  let t = infer ctx e1 in
+		    if t = (infer ctx e2) then BOOL else raise (Error "Ill-Typed")
+    | And(e1,e2) -> if (infer ctx e1 = BOOL && infer ctx e2 = BOOL) then BOOL
+		    else raise (Error "Ill-Typed")
+    | Or(e1,e2) ->  if (infer ctx e1 = BOOL && infer ctx e2 = BOOL) then BOOL
+		    else raise (Error "Ill-Typed")
+    | Not(e1) -> if infer ctx e1 = BOOL then BOOL else raise (Error "Ill-Typed")
+    | Trunc(e1) -> if infer ctx e1 = FLOAT then INT else raise (Error "Ill-Typed")
+    | ToFloat(e1) -> if infer ctx e1 = INT then FLOAT else raise (Error "Ill-Typed") 
+    | Int n -> INT 
+    | Float n -> FLOAT
+    | Bool p -> BOOL
+    | If_Then_Else(e1,e2,e3) -> let t = infer ctx e2 in
+				if (infer ctx e1 = BOOL && t = infer ctx e3) then t
+						    else raise (Error "Ill-Typed")
+    | Sum(e1,e2,(y,e3)) -> BOOL
+    | Var y ->  BOOL
+		  
   let infer e = infer [] e
-
+		      
  end;;
 
  module Test = 
