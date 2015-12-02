@@ -179,7 +179,12 @@ end
 		      | Int x -> Float (float_of_int(x))
 		      | _ -> raise (Error "You good sir are fucking mental!!!")
 		     )
-    | Eq(e1, e2) -> 
+    | Eq(e1, e2) -> (match eval e1, eval e2 with
+		     | Bool p1, Bool p2 -> Bool (p1 = p2)
+		     | Int i1, Int i2 -> Bool ( i1 = i2)
+		     | Float f1, Float f2 -> Bool (f1 = f2)
+		     | _ , _ -> raise (Error "Pay attention Sir")
+		    )
     | Lt(e1,e2) -> 
     | And(e1,e2) ->
     | Or(e1,e2) -> 
