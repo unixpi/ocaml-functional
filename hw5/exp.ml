@@ -129,12 +129,6 @@ end
     | Int i1, Int i2 -> Int (op i1 i2)
     | _, _ -> raise (Error "you are fucking nuts sir!")
 
-  let rec sumInts a b f =
-    if (a = b) then (f b) else (f a) + (sumInts (a+1) b f)
-
-  let rec sumFloats a b f =
-    if (a = b) then (f b) else (f a) +. (sumInts (a+1) b f)
-
   let rec eval (e : exp) : exp = match e with
     | Int n -> Int n
     | Float n -> Float n
@@ -231,7 +225,7 @@ end
 			   )  
     | Var x -> raise (Error "unbound variable")
 
-  let rec contains1 tuplelist = match tuplelist with
+  let rec contains1 v tuplelist = match tuplelist with
     | [] -> raise (Error "Variable Unbound")
     | (v1,tp) :: tl -> if (v = v1) then tp else contains1 v tl 
 				     
@@ -257,7 +251,7 @@ end
     | Lt(e1,e2) -> (match infer ctx e1, infer ctx e2 with
 		    | INT, INT -> BOOL
 		    | FLOAT, FLOAT -> BOOL
-		    | _, _ -> raise (Error "Ill-Typed")
+		    | _, _ -> raise (Error "Ill-Typed"))
     | And(e1,e2) -> if (infer ctx e1 = BOOL && infer ctx e2 = BOOL) then BOOL
 		    else raise (Error "Ill-Typed")
     | Or(e1,e2) ->  if (infer ctx e1 = BOOL && infer ctx e2 = BOOL) then BOOL
@@ -280,7 +274,7 @@ end
 		  
   let infer e = infer [] e
 		      
- end;;
+ end
 
  module Test = 
  struct
