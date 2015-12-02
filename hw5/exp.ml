@@ -135,8 +135,6 @@ end
   let rec sumFloats a b f =
     if (a = b) then (f b) else (f a) +. (sumInts (a+1) b f)
 
-  let sumEval e =  (* Sum(e1, e2, (x, e3)) *)
-
   let rec eval (e : exp) : exp = match e with
     | Int n -> Int n
     | Float n -> Float n
@@ -231,7 +229,7 @@ end
 							  eval (Plus(Float f , restOfSum))
 			        | _ , _ , _ -> raise (Error "Is it true that you want it? LA LA..."))
 			   )  
-    | Var x ->
+    | Var x -> raise (Error "unbound variable")
 
   let rec contains1 tuplelist = match tuplelist with
     | [] -> raise (Error "Variable Unbound")
