@@ -121,11 +121,54 @@ end
 			     
     | Var y -> if y = x then e else Var y
 
-    
+  let combineFloats v1 v2 op = match v1, v2 with
+    | Float f1, Float f2 -> Float (op f1 f2)
+    | _       , _        -> raise (Error "You are crazy!")
 
-  let rec eval (e : exp) : exp = raise (Error "Not Implemented - Your Task!")
+  let combineInts v1 v2 op = match v1, v2 with
+    | Int i1, Int i2 -> Int (op i1 i2)
+    | _, _ -> raise (Error "you are fucking nuts sir!")
 
-  let rec contains1 v tuplelist = match tuplelist with
+  let rec eval (e : exp) : exp = match e with
+    | Int n -> Int n
+    | Float n -> Float n
+    | Bool p -> Bool p
+    | Plus(e1, e2) -> (let v1 = eval e1 in
+		       let v2 = eval e2 in
+		       try
+			 combineFloats v1 v2 (+.)
+		       with
+			 _ -> combineInts v1 v2 (+))
+    | Minus(e1, e2) -> (let v1 = eval e1 in
+		       let v2 = eval e2 in
+		       try
+			 combineFloats v1 v2 (+.)
+		       with
+			 _ -> combineInts v1 v2 (+))
+    | Times(e1, e2) -> (let v1 = eval e1 in
+		       let v2 = eval e2 in
+		       try
+			 combineFloats v1 v2 (+.)
+		       with
+			 _ -> combineInts v1 v2 (+))
+    | Div(e1, e2) ->  (let v1 = eval e1 in
+		       let v2 = eval e2 in
+		       try
+			 combineFloats v1 v2 (+.)
+		       with
+			 _ -> combineInts v1 v2 (+))
+    | Eq(e1, e2) -> 
+    | Lt(e1,e2) -> 
+    | And(e1,e2) ->
+    | Or(e1,e2) -> 
+    | Not(e1) -> 
+    | Trunc(e1) -> 
+    | ToFloat(e1) -> 
+    | If_Then_Else(e1,e2,e3) -> 
+    | Sum(e1,e2,(x,e3)) -> 
+    | Var x ->
+
+  let rec contains1 tuplelist = match tuplelist with
     | [] -> raise (Error "Variable Unbound")
     | (v1,tp) :: tl -> if (v = v1) then tp else contains1 v tl 
 				     
@@ -148,8 +191,10 @@ end
 		       | _ , _ -> raise (Error "Ill-Typed!"))
     | Eq(e1, e2) -> let t = infer ctx e1 in
 		    if t = (infer ctx e2) then BOOL else raise (Error "Ill-Typed")
-    | Lt(e1,e2) ->  let t = infer ctx e1 in
-		    if t = (infer ctx e2) then BOOL else raise (Error "Ill-Typed")
+    | Lt(e1,e2) -> (match infer ctx e1, infer ctx e2 with
+		    | INT, INT -> BOOL
+		    | FLOAT, FLOAT -> BOOL
+		    | _, _ -> raise (Error "Ill-Typed")
     | And(e1,e2) -> if (infer ctx e1 = BOOL && infer ctx e2 = BOOL) then BOOL
 		    else raise (Error "Ill-Typed")
     | Or(e1,e2) ->  if (infer ctx e1 = BOOL && infer ctx e2 = BOOL) then BOOL
