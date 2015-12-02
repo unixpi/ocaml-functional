@@ -198,7 +198,7 @@ end
 		     | Float f1, Float f2 -> Bool (f1 < f2)
 		     | _ , _ -> raise (Error "Pay attention Sir")
 		    )
-    | And(e1,e2) -> (match eval el, eval e2 with
+    | And(e1,e2) -> (match eval e1, eval e2 with
 		     | Bool true, Bool true -> Bool true
 		     | Bool true, Bool false -> Bool false
 		     | Bool false, Bool true -> Bool false
@@ -214,12 +214,13 @@ end
 			    let b = eval e2 in
 			    let t = eval (subst (a,x) e3) in
 			    if a > b then Int 0 else
-			      let restOfSum = (Sum(Int (a+1), Int b, (x, e3))) in 
 			      match a, b, t with
-			      | Int a , Int b, Int n -> eval (Plus(Int n , restOfSum ))
-			      | Int a , Int b, Float f -> eval (Plus(Int n , restOfSum ))
+			      | Int i1 , Int i2, Int n -> let restOfSum = (Sum( Int (i1 + 1), b, (x, e3))) in
+							eval (Plus(Int n , restOfSum ))
+			      | Int i1 , Int i2, Float f -> let restOfSum = (Sum( Int (i1 + 1), b, (x, e3))) in
+							  eval (Plus(Float f , restOfSum ))
 			      | _ , _ , _ -> raise (Error "Is it true that you want it? LA LA...")
-			   )
+			   ) 
     | Var x ->
 
   let rec contains1 tuplelist = match tuplelist with
