@@ -151,23 +151,23 @@ end
     | Minus(e1, e2) -> (let v1 = eval e1 in
 		       let v2 = eval e2 in
 		       try
-			 combineFloats v1 v2 (+.)
+			 combineFloats v1 v2 (-.)
 		       with
-			 _ -> combineInts v1 v2 (+)
+			 _ -> combineInts v1 v2 (-)
 		       )
     | Times(e1, e2) -> (let v1 = eval e1 in
 		       let v2 = eval e2 in
 		       try
-			 combineFloats v1 v2 (+.)
+			 combineFloats v1 v2 ( *. )
 		       with
-			 _ -> combineInts v1 v2 (+)
+			 _ -> combineInts v1 v2 ( * )
 		       )
     | Div(e1, e2) ->  (let v1 = eval e1 in
 		       let v2 = eval e2 in
 		       try
-			 combineFloats v1 v2 (+.)
+			 combineFloats v1 v2 ( /. )
 		       with
-			 _ -> combineInts v1 v2 (+)
+			 _ -> combineInts v1 v2 ( / )
 		      )
     | If_Then_Else(e1,e2,e3) -> (match eval e1 with 
 	 | Bool false -> eval e3
@@ -213,14 +213,24 @@ end
     | Sum(e1,e2,(x,e3)) -> (let a = eval e1 in
 			    let b = eval e2 in
 			    let t = eval (subst (a,x) e3) in
-			    if a > b then Int 0 else
-			      match a, b, t with
-			      | Int i1 , Int i2, Int n -> let restOfSum = (Sum( Int (i1 + 1), b, (x, e3))) in
+			    match t with
+			    | Int z ->
+			        (if a > b then Int 0 else
+			        match a, b, t with
+			        | Int i1 , Int i2, Int n -> let restOfSum = (Sum( Int (i1 + 1), b, (x, e3))) in
 							eval (Plus(Int n , restOfSum ))
-			      | Int i1 , Int i2, Float f -> let restOfSum = (Sum( Int (i1 + 1), b, (x, e3))) in
-							  eval (Plus(Float f , restOfSum ))
-			      | _ , _ , _ -> raise (Error "Is it true that you want it? LA LA...")
-			   ) 
+			        | Int i1 , Int i2, Float f -> let restOfSum = (Sum( Int (i1 + 1), b, (x, e3))) in
+							  eval (Plus(Float f , restOfSum))
+			        | _ , _ , _ -> raise (Error "Is it true that you want it? LA LA..."))
+			    | Float z ->
+			        (if a > b then Float 0. else
+			        match a, b, t with
+			        | Int i1 , Int i2, Int n -> let restOfSum = (Sum( Int (i1 + 1), b, (x, e3))) in
+							eval (Plus(Int n , restOfSum ))
+			        | Int i1 , Int i2, Float f -> let restOfSum = (Sum( Int (i1 + 1), b, (x, e3))) in
+							  eval (Plus(Float f , restOfSum))
+			        | _ , _ , _ -> raise (Error "Is it true that you want it? LA LA..."))
+			   )  
     | Var x ->
 
   let rec contains1 tuplelist = match tuplelist with
