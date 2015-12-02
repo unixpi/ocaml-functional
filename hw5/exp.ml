@@ -190,8 +190,18 @@ end
 		     | Float f1, Float f2 -> Bool (f1 < f2)
 		     | _ , _ -> raise (Error "Pay attention Sir")
 		    )
-    | And(e1,e2) ->
-    | Or(e1,e2) -> 
+    | And(e1,e2) -> (match eval el, eval e2 with
+		     | Bool true, Bool true -> Bool true
+		     | Bool true, Bool false -> Bool false
+		     | Bool false, Bool true -> Bool false
+		     | _ , _ -> raise (Error "My heart's alive! Firestorms..")
+		    )
+    | Or(e1,e2) -> (match eval e1, eval e2 with
+		    | Bool true, Bool p -> Bool true
+		    | Bool p, Bool true -> Bool true
+		    | Bool false, Bool false -> Bool false
+		    | _ , _ -> raise (Error "I'm here for you.. yoohoo!")
+		   )
 
     | Sum(e1,e2,(x,e3)) -> 
     | Var x ->
