@@ -129,6 +129,14 @@ end
     | Int i1, Int i2 -> Int (op i1 i2)
     | _, _ -> raise (Error "you are fucking nuts sir!")
 
+  let rec sumInts a b f =
+    if (a = b) then (f b) else (f a) + (sumInts (a+1) b f)
+
+  let rec sumFloats a b f =
+    if (a = b) then (f b) else (f a) +. (sumInts (a+1) b f)
+
+  let sumEval e =  (* Sum(e1, e2, (x, e3)) *)
+
   let rec eval (e : exp) : exp = match e with
     | Int n -> Int n
     | Float n -> Float n
@@ -202,8 +210,13 @@ end
 		    | Bool false, Bool false -> Bool false
 		    | _ , _ -> raise (Error "I'm here for you.. yoohoo!")
 		   )
-
-    | Sum(e1,e2,(x,e3)) -> 
+    | Sum(e1,e2,(x,e3)) -> (let a = eval e1 in
+			    let b = eval e2 in
+			    let t = eval (subst (a,x) e3) in
+			    match a, b, t with
+			    | Int a , Int b, Int n ->
+			    | Int a , Int b, Float f ->
+			    | _ , _ -> raise (Error "Is it true that you want it? LA LA LA LA...")
     | Var x ->
 
   let rec contains1 tuplelist = match tuplelist with
