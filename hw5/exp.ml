@@ -175,8 +175,10 @@ end
 		    | Float x -> Int (int_of_float(x))
 		    | _ -> raise (Error "You are nuts man")
 		   )
-    | ToFloat(e1) -> 
-
+    | ToFloat(e1) -> (match eval e1 with
+		      | Int x -> Float (float_of_int(x))
+		      | _ -> raise (Error "You good sir are fucking mental!!!")
+		     )
     | Eq(e1, e2) -> 
     | Lt(e1,e2) -> 
     | And(e1,e2) ->
