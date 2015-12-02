@@ -213,10 +213,13 @@ end
     | Sum(e1,e2,(x,e3)) -> (let a = eval e1 in
 			    let b = eval e2 in
 			    let t = eval (subst (a,x) e3) in
-			    match a, b, t with
-			    | Int a , Int b, Int n ->
-			    | Int a , Int b, Float f ->
-			    | _ , _ -> raise (Error "Is it true that you want it? LA LA LA LA...")
+			    if a > b then Int 0 else
+			      let restOfSum = (Sum(Int (a+1), Int b, (x, e3))) in 
+			      match a, b, t with
+			      | Int a , Int b, Int n -> eval (Plus(Int n , restOfSum ))
+			      | Int a , Int b, Float f -> eval (Plus(Int n , restOfSum ))
+			      | _ , _ , _ -> raise (Error "Is it true that you want it? LA LA...")
+			   )
     | Var x ->
 
   let rec contains1 tuplelist = match tuplelist with
