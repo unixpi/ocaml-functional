@@ -138,40 +138,49 @@ end
 		       try
 			 combineFloats v1 v2 (+.)
 		       with
-			 _ -> combineInts v1 v2 (+))
+			 _ -> combineInts v1 v2 (+)
+		      )
     | Minus(e1, e2) -> (let v1 = eval e1 in
 		       let v2 = eval e2 in
 		       try
 			 combineFloats v1 v2 (+.)
 		       with
-			 _ -> combineInts v1 v2 (+))
+			 _ -> combineInts v1 v2 (+)
+		       )
     | Times(e1, e2) -> (let v1 = eval e1 in
 		       let v2 = eval e2 in
 		       try
 			 combineFloats v1 v2 (+.)
 		       with
-			 _ -> combineInts v1 v2 (+))
+			 _ -> combineInts v1 v2 (+)
+		       )
     | Div(e1, e2) ->  (let v1 = eval e1 in
 		       let v2 = eval e2 in
 		       try
 			 combineFloats v1 v2 (+.)
 		       with
-			 _ -> combineInts v1 v2 (+))
+			 _ -> combineInts v1 v2 (+)
+		      )
     | If_Then_Else(e1,e2,e3) -> (match eval e1 with 
 	 | Bool false -> eval e3
 	 | Bool true  -> eval e2
-	 | _          -> raise (Error "You are certainly crazy!"))
+	 | _          -> raise (Error "You are certainly crazy!")
+				)
+    | Not(e1) -> (match eval e1 with
+		  | Bool false -> Bool true
+		  | Bool true -> Bool false
+		  | _ -> raise (Error "You are certainly crazy!")
+		 )
+    | Trunc(e1) -> (match eval e1 with
+		    | Float x -> Int (int_of_float(x))
+		    | _ -> raise (Error "You are nuts man")
+		   )
+    | ToFloat(e1) -> 
 
     | Eq(e1, e2) -> 
     | Lt(e1,e2) -> 
     | And(e1,e2) ->
     | Or(e1,e2) -> 
-    | Not(e1) -> (match eval e1 with
-		  | Bool false -> Bool true
-		  | Bool true -> Bool false
-		  | _ -> raise (Error "You are certainly crazy!"))
-    | Trunc(e1) -> 
-    | ToFloat(e1) -> 
 
     | Sum(e1,e2,(x,e3)) -> 
     | Var x ->
