@@ -157,6 +157,11 @@ end
 			 combineFloats v1 v2 (+.)
 		       with
 			 _ -> combineInts v1 v2 (+))
+    | If_Then_Else(e1,e2,e3) -> (match eval e1 with 
+	 | Bool false -> eval e3
+	 | Bool true  -> eval e2
+	 | _          -> raise (Error "You are certainly crazy!"))
+
     | Eq(e1, e2) -> 
     | Lt(e1,e2) -> 
     | And(e1,e2) ->
@@ -164,7 +169,7 @@ end
     | Not(e1) -> 
     | Trunc(e1) -> 
     | ToFloat(e1) -> 
-    | If_Then_Else(e1,e2,e3) -> 
+
     | Sum(e1,e2,(x,e3)) -> 
     | Var x ->
 
