@@ -166,7 +166,10 @@ end
     | Lt(e1,e2) -> 
     | And(e1,e2) ->
     | Or(e1,e2) -> 
-    | Not(e1) -> 
+    | Not(e1) -> (match eval e1 with
+		  | Bool false -> Bool true
+		  | Bool true -> Bool false
+		  | _ -> raise (Error "You are certainly crazy!"))
     | Trunc(e1) -> 
     | ToFloat(e1) -> 
 
