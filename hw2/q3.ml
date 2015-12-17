@@ -7,9 +7,9 @@ let rec iter_sum f (lo, hi) inc =
     sum' (lo, 0.0);;
 
 
-let rec conv f g dy =                                                                                                         
+let rec conv2 f g dy =                                                                             
     (fun x -> iter_sum (fun y -> f y *. g (x +. y)) (dy /. 2.0, x) (fun y -> y +. dy));;
 
   (* example *)
-conv (fun x -> x *. x) (fun y -> 1.0) 0.0001;;
+conv2 (fun x -> x *. x) (fun y -> 1.0) 0.0001;;
 

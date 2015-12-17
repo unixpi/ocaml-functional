@@ -41,10 +41,19 @@ module Stack : STACK =
 	pop = (fun () -> stack := (if !stack = [] then raise (Error "no top element")
 				   else
 				     match !stack with
-				       h :: t -> t)); }
-  			       
-				       
-	   
+				       h :: t -> stack := t)); }	   
   end
 
-
+(* let s1 = Stack.new_stack();;
+val s1 : '_a Stack.stack_obj =
+{Stack.top = <fun>; Stack.push = <fun>; Stack.pop = <fun>}
+# let s2 = Stack.new_stack();;
+val s2 : '_a Stack.stack_obj =
+{Stack.top = <fun>; Stack.push = <fun>; Stack.pop = <fun>}
+# s1.Stack.push 3;;
+- : unit = ()
+# s1.Stack.top;;
+- : unit -> int = <fun>
+# s1.Stack.top ();;
+- : int = 3
+ *)

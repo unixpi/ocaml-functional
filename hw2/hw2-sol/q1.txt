@@ -1,0 +1,55 @@
+COMP 302 Assignment 2
+
+Question 1A:
+
+  Prove that indeed concat l produces the same result as concat' l.
+
+Theorem: for any string list l, acc ^ (concat l) = conc l acc
+
+Proof:
+We will use structural induction on the list l.
+
+Base case: l = []
+
+To prove: acc ^ (concat []) = conc [] acc
+
+   acc ^ (concat []) => acc ^""  [by program concat]
+                     => acc      [by operator ^]
+   <= conc [] acc                [by program conc]
+
+therefore, acc ^ (concat []) = conc [] acc
+
+
+Step case: l = h::t
+
+Induction hypothesis (IH):
+  acc' ^ (concat t) = conc t acc'
+
+To prove:
+  acc ^ (concat (h::t)) = conc (h::t) acc
+
+  acc ^ (concat (h::t))
+  => acc ^ (h ^ (concat t))         [by program concat]
+  => (acc ^ h) ^ (concat t)         [by associativity of operator ^]
+  => conc t (acc ^ h)               [by IH]
+  <= conc (h::t) acc                [by program conc]
+
+therefore, acc ^ (concat (h::t)) = conc (h::t) acc.
+
+Theorem: concat l = concat' l.
+
+Proof: by simple computation and previous theorem
+  concat l =>
+     "" ^ (concat l)                [by property of ^]
+     => conc l ""                   [by previous theorem]
+     <= concat' l                   [by program concat']
+QED.
+
+
+Question 1B: Is your friend right in claiming concat' is better? I
+what sense is it better?
+
+Yes, my friend is right. concat' is better because it is tail
+recursive and thus it is possible to run it in constant stack
+space. So concat' can concatenate arbitrarily long lists, while concat
+will be limited by the size of the stack.

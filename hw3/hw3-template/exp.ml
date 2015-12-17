@@ -123,7 +123,7 @@ module ArithExp : EXP =
  *)				       
 
   let p4 expression = match expression with
-	   | Div (a,b) -> if b = Int(0) then true else false
+	   | Div (a,b) -> if (eval b = 0) then true else false
 	   | _ -> false;;
   
   let div_by_zero e = 
